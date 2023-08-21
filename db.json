@@ -1,0 +1,20 @@
+{
+  "students": [
+    {
+      "name": "update",
+      "class": "Praesentium dolor mi",
+      "age": "Veniam ut quas cons",
+      "gender": "Female",
+      "major": "TKJ",
+      "id": 1
+    },
+    {
+      "name": "update2",
+      "class": "Elit eiusmod nemo s",
+      "age": "Quia dolorum quod ea",
+      "gender": "male",
+      "major": "Choose",
+      "id": 2
+    }
+  ]
+}

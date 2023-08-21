@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <input type="text" id="name" placeholder="add name..">
+        <input type="text" id="class" placeholder="grade">
+        <input type="text" id="age" placeholder="age">
+        <select id="gender">
+            <option>Choose</option>
+            <option value="male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <select id="major">
+            <option>Choose</option>
+            <option value="RPL">RPL</option>
+            <option value="TKJ">TKJ</option>
+            <option value="DKV">DKV</option>
+        </select>
+        <button id="buttonsave" onclick="saveData()">Save</button>
+    </div>
+    <table style="margin-top: 15px;" border="1">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Fullname</th>
+                <th>Grade</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Major</th>
+                <th>Action</th>
+                <th>Update Name</th>
+            </tr>
+        </thead>
+        <tbody id="result"></tbody>
+    </table>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        const updateName = async (id) => {
+            let nameForm = document.getElementById(id).value
+            console.log(nameForm)
+            await axios.patch(`http://localhost:3000/students/${id}`, {
+                    name: nameForm,
+                })
+                .catch((error) => {
+                    console.log(error.message)
+                })
+        }
+
+        const editData = (id, name, clas, age, gender, major) => {
+            document.getElementById('name').value = name
+            document.getElementById('class').value = clas
+            document.getElementById('age').value = age
+            document.getElementById('gender').value = gender
+            document.getElementById('major').value = major
+            document.getElementById('buttonsave').innerText = 'change'
+            document.getElementById('buttonsave').setAttribute('onclick', `updateData(${id})`)
+        }
+
+        const updateData = async (id) => {
+            let nameForm = document.getElementById('name').value
+            let classForm = document.getElementById('class').value
+            let ageForm = document.getElementById('age').value
+            let genderForm = document.getElementById('gender').value
+            let majorForm = document.getElementById('major').value
+            await axios.put(`http://localhost:3000/students/${id}`, {
+                    name: nameForm,
+                    class: classForm,
+                    age: ageForm,
+                    gender: genderForm,
+                    major: majorForm
+                })
+                .catch((error) => {
+                    console.log(error.message)
+                })
+        }
+
+        const saveData = async () => {
+            let nameForm = document.getElementById('name').value
+            let classForm = document.getElementById('class').value
+            let ageForm = document.getElementById('age').value
+            let genderForm = document.getElementById('gender').value
+            let majorForm = document.getElementById('major').value
+            await axios.post(`http://localhost:3000/students`, {
+                    name: nameForm,
+                    class: classForm,
+                    age: ageForm,
+                    gender: genderForm,
+                    major: majorForm
+                })
+                .catch((error) => {
+                    console.log(error.message)
+                })
+        }
+
+        const deleteData = async (id) => {
+            await axios.delete(`http://localhost:3000/students/${id}`)
+        }
+
+        const getData = async () => {
+            await axios.get(`http://localhost:3000/students`)
+                .then((response) => {
+                    let contain = ``;
+                    let students = response.data;
+                    for (let i = 0; i < students.length; i++) {
+                        contain += `
+                      <tr>
+                        <td>${i + 1}</td>
+                        <td>${students[i].name}</td>
+                        <td>${students[i].class}</td>
+                        <td>${students[i].age}</td>
+                        <td>${students[i].gender}</td>
+                        <td>${students[i].major}</td>
+                        <td>
+                            <button onclick="editData('${students[i].id}','${students[i].name}','${students[i].class}', 
+                            '${students[i].age}','${students[i].gender}','${students[i].major}',)">edit</button>
+                            <button onclick="deleteData(${students[i].id})">delete</button>
+                        </td>
+                        <td>
+                            <input type="text" id="${students[i].id}" placeholder="update name..">
+                            <button id="update" onclick="updateName('${students[i].id}','${students[i].name}','${students[i].class}', 
+                            '${students[i].age}','${students[i].gender}','${students[i].major}')">Update</button>
+                            </td>
+                    </tr>
+                     `
+                    }
+                    document.getElementById('result').innerHTML = contain;
+                })
+                .catch((error) => {
+                    console.log(error.message)
+                })
+        }
+        getData()
+    </script>
+</body>
+
+</html>
